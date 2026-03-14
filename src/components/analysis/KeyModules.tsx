@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Puzzle, FolderOpen, FileCode, ArrowRight } from "lucide-react";
+import { Puzzle, FolderOpen } from "lucide-react";
 import { KeyModule } from "@/types/repo";
 
 interface KeyModulesProps {
@@ -7,11 +7,11 @@ interface KeyModulesProps {
 }
 
 const MODULE_COLORS = [
-  { border: "border-primary/20", glow: "hover:border-primary/40 hover:shadow-primary/5", dot: "bg-primary" },
-  { border: "border-accent/20", glow: "hover:border-accent/40 hover:shadow-accent/5", dot: "bg-accent" },
-  { border: "border-success/20", glow: "hover:border-success/40 hover:shadow-success/5", dot: "bg-success" },
-  { border: "border-warning/20", glow: "hover:border-warning/40 hover:shadow-warning/5", dot: "bg-warning" },
-  { border: "border-neon-pink/20", glow: "hover:border-neon-pink/40 hover:shadow-neon-pink/5", dot: "bg-neon-pink" },
+  { border: "border-primary/20", hover: "hover:border-primary/30", dot: "bg-primary" },
+  { border: "border-accent/20", hover: "hover:border-accent/30", dot: "bg-accent" },
+  { border: "border-success/20", hover: "hover:border-success/30", dot: "bg-success" },
+  { border: "border-warning/20", hover: "hover:border-warning/30", dot: "bg-warning" },
+  { border: "border-neon-pink/20", hover: "hover:border-neon-pink/30", dot: "bg-neon-pink" },
 ];
 
 export function KeyModules({ modules }: KeyModulesProps) {
@@ -40,31 +40,26 @@ export function KeyModules({ modules }: KeyModulesProps) {
           return (
             <motion.div
               key={mod.name}
-              initial={{ opacity: 0, x: -16 }}
+              initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 + i * 0.06 }}
-              whileHover={{ x: 4 }}
-              className={`group p-4 rounded-xl border ${colorSet.border} ${colorSet.glow} bg-secondary/20 hover:bg-secondary/30 transition-all duration-300 cursor-default shadow-lg shadow-transparent hover:shadow-md`}
+              className={`group p-4 rounded-xl border ${colorSet.border} ${colorSet.hover} bg-secondary/20 transition-all duration-200 cursor-default`}
             >
               <div className="flex items-start gap-3">
-                {/* Color dot indicator */}
                 <div className={`w-2 h-2 rounded-full ${colorSet.dot} mt-1.5 flex-shrink-0`} />
 
                 <div className="space-y-1.5 flex-1 min-w-0">
-                  <p className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">
+                  <p className="font-semibold text-sm text-foreground">
                     {mod.name}
                   </p>
                   <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                     {mod.purpose}
                   </p>
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground/60 font-mono mt-1">
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground/50 font-mono mt-1">
                     <FolderOpen className="w-3 h-3 flex-shrink-0" />
                     <span className="truncate">{mod.location}</span>
                   </div>
                 </div>
-
-                {/* Arrow on hover */}
-                <ArrowRight className="w-4 h-4 text-muted-foreground/20 group-hover:text-primary/50 transition-all duration-300 transform group-hover:translate-x-1 mt-1" />
               </div>
             </motion.div>
           );

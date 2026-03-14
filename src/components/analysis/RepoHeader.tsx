@@ -110,8 +110,7 @@ export function RepoHeader({ repo }: RepoHeaderProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          whileHover={{ scale: 1.1 }}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border/50 text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-300 text-sm self-start"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border/50 text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-300 text-sm self-start hover:opacity-90"
         >
           <ExternalLink className="w-4 h-4" />
           <span className="hidden md:inline">View on GitHub</span>

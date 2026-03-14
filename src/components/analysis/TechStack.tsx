@@ -2,19 +2,19 @@ import { motion } from "framer-motion";
 import { Layers, Server, Database, Cloud, TestTube, Package, Monitor, Wrench } from "lucide-react";
 import { TechStackItem } from "@/types/repo";
 
-const CATEGORY_CONFIG: Record<string, { icon: React.ElementType; label: string; gradient: string; neonClass: string }> = {
-  frontend: { icon: Monitor, label: "Frontend", gradient: "from-primary/20 to-primary/5", neonClass: "neon-badge" },
-  backend: { icon: Server, label: "Backend", gradient: "from-accent/20 to-accent/5", neonClass: "neon-badge-purple" },
-  database: { icon: Database, label: "Database", gradient: "from-success/20 to-success/5", neonClass: "neon-badge-green" },
-  devops: { icon: Cloud, label: "DevOps", gradient: "from-warning/20 to-warning/5", neonClass: "neon-badge" },
-  testing: { icon: TestTube, label: "Testing", gradient: "from-accent/20 to-accent/5", neonClass: "neon-badge-purple" },
-  other: { icon: Package, label: "Other", gradient: "from-muted/30 to-muted/10", neonClass: "neon-badge" },
+const CATEGORY_CONFIG: Record<string, { icon: React.ElementType; label: string; gradient: string }> = {
+  frontend: { icon: Monitor, label: "Frontend", gradient: "from-primary/20 to-primary/5" },
+  backend: { icon: Server, label: "Backend", gradient: "from-accent/20 to-accent/5" },
+  database: { icon: Database, label: "Database", gradient: "from-success/20 to-success/5" },
+  devops: { icon: Cloud, label: "DevOps", gradient: "from-warning/20 to-warning/5" },
+  testing: { icon: TestTube, label: "Testing", gradient: "from-accent/20 to-accent/5" },
+  other: { icon: Package, label: "Other", gradient: "from-muted/30 to-muted/10" },
 };
 
-const CONFIDENCE_STYLES: Record<string, { bg: string; ring: string; glow: string }> = {
-  high: { bg: "bg-success/10", ring: "ring-success/30", glow: "shadow-success/10" },
-  medium: { bg: "bg-warning/10", ring: "ring-warning/30", glow: "shadow-warning/10" },
-  low: { bg: "bg-muted/20", ring: "ring-muted/30", glow: "shadow-none" },
+const CONFIDENCE_STYLES: Record<string, { bg: string; border: string }> = {
+  high: { bg: "bg-success/8", border: "border-success/20" },
+  medium: { bg: "bg-warning/8", border: "border-warning/20" },
+  low: { bg: "bg-muted/15", border: "border-border/30" },
 };
 
 interface TechStackProps {
@@ -69,11 +69,10 @@ export function TechStack({ items }: TechStackProps) {
                   return (
                     <motion.div
                       key={tech.name}
-                      initial={{ opacity: 0, scale: 0.8 }}
+                      initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.25 + groupIdx * 0.08 + i * 0.04 }}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium ${style.bg} ring-1 ${style.ring} shadow-md ${style.glow} text-foreground/80 cursor-default transition-all duration-200`}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium ${style.bg} border ${style.border} text-foreground/80 cursor-default hover:text-foreground transition-colors duration-200`}
                     >
                       {tech.name}
                     </motion.div>

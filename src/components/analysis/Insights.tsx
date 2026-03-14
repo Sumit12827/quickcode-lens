@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { BarChart3, FileText, FolderTree, Zap, Lightbulb, ChevronDown, ChevronRight, TrendingUp, Shield, BookOpen } from "lucide-react";
+import { motion } from "framer-motion";
+import { TrendingUp, BookOpen, FolderTree, Shield, Lightbulb, ChevronDown } from "lucide-react";
 import { AnalysisResult } from "@/types/repo";
 
 const HEALTH_CONFIG: Record<string, { color: string; bgColor: string; ringColor: string; percent: number; label: string }> = {
@@ -14,14 +14,13 @@ const HEALTH_CONFIG: Record<string, { color: string; bgColor: string; ringColor:
   experimental: { color: "hsl(215, 20%, 55%)", bgColor: "bg-muted/20", ringColor: "text-muted-foreground", percent: 30, label: "Experimental" },
 };
 
-function GaugeRing({ value, color, size = 60, strokeWidth = 5 }: { value: number; color: string; size?: number; strokeWidth?: number }) {
+function GaugeRing({ value, color, size = 56, strokeWidth = 5 }: { value: number; color: string; size?: number; strokeWidth?: number }) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (value / 100) * circumference;
 
   return (
     <svg width={size} height={size} className="gauge-ring">
-      {/* Background ring */}
       <circle
         cx={size / 2}
         cy={size / 2}
@@ -30,7 +29,6 @@ function GaugeRing({ value, color, size = 60, strokeWidth = 5 }: { value: number
         stroke="hsl(230 20% 15%)"
         strokeWidth={strokeWidth}
       />
-      {/* Value ring */}
       <motion.circle
         cx={size / 2}
         cy={size / 2}
@@ -43,7 +41,6 @@ function GaugeRing({ value, color, size = 60, strokeWidth = 5 }: { value: number
         initial={{ strokeDashoffset: circumference }}
         animate={{ strokeDashoffset: offset }}
         transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
-        style={{ filter: `drop-shadow(0 0 6px ${color}40)` }}
       />
     </svg>
   );
@@ -58,21 +55,9 @@ export function Insights({ analysis }: InsightsProps) {
   const [expandedSuggestion, setExpandedSuggestion] = useState<number | null>(null);
 
   const gauges = [
-    {
-      key: healthIndicators.documentation,
-      label: "Documentation",
-      icon: BookOpen,
-    },
-    {
-      key: healthIndicators.codeOrganization,
-      label: "Organization",
-      icon: FolderTree,
-    },
-    {
-      key: healthIndicators.maturity,
-      label: "Maturity",
-      icon: Shield,
-    },
+    { key: healthIndicators.documentation, label: "Documentation", icon: BookOpen },
+    { key: healthIndicators.codeOrganization, label: "Organization", icon: FolderTree },
+    { key: healthIndicators.maturity, label: "Maturity", icon: Shield },
   ];
 
   return (
@@ -99,31 +84,31 @@ export function Insights({ analysis }: InsightsProps) {
           return (
             <motion.div
               key={gauge.label}
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4 + i * 0.1 }}
-              className="flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary/20 border border-border/20 hover:border-border/40 transition-all duration-300"
+              className="flex flex-col items-center gap-2 p-3 rounded-xl bg-secondary/20 border border-border/20"
             >
               <div className="relative">
-                <GaugeRing value={config.percent} color={config.color} size={56} strokeWidth={4} />
+                <GaugeRing value={config.percent} color={config.color} size={52} strokeWidth={4} />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <GaugeIcon className={`w-4 h-4 ${config.ringColor}`} />
+                  <GaugeIcon className={`w-3.5 h-3.5 ${config.ringColor}`} />
                 </div>
               </div>
               <div className="text-center">
-                <p className={`text-[11px] font-bold ${config.ringColor}`}>
+                <p className={`text-xs font-semibold ${config.ringColor}`}>
                   {config.label}
                 </p>
-                <p className="text-[10px] text-muted-foreground/60">{gauge.label}</p>
+                <p className="text-[10px] text-muted-foreground/50">{gauge.label}</p>
               </div>
             </motion.div>
           );
         })}
       </div>
 
-      {/* Suggestions as expandable cards */}
+      {/* Suggestions */}
       {improvements.length > 0 && (
-        <div className="space-y-2 pt-2 border-t border-border/20">
+        <div className="space-y-2.5 pt-2 border-t border-border/20">
           <div className="flex items-center gap-2">
             <Lightbulb className="w-4 h-4 text-warning" />
             <p className="text-sm font-semibold text-foreground">Suggestions</p>
@@ -140,11 +125,13 @@ export function Insights({ analysis }: InsightsProps) {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.6 + i * 0.05 }}
                 onClick={() => setExpandedSuggestion(expandedSuggestion === i ? null : i)}
-                className="w-full text-left px-3 py-2 rounded-lg bg-secondary/20 border border-border/20 hover:border-primary/20 transition-all duration-200 group cursor-pointer"
+                className="w-full text-left px-3 py-2 rounded-lg bg-secondary/20 border border-border/20 hover:border-border/40 transition-all duration-200 cursor-pointer"
               >
-                <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-warning mt-1.5 flex-shrink-0" />
-                  <p className={`text-xs text-muted-foreground group-hover:text-foreground transition-colors leading-relaxed ${
+                <div className="flex items-start gap-2.5">
+                  <span className="text-[10px] text-muted-foreground/40 font-mono mt-0.5 flex-shrink-0">
+                    {i + 1}.
+                  </span>
+                  <p className={`text-xs text-muted-foreground hover:text-foreground/80 transition-colors leading-relaxed ${
                     expandedSuggestion === i ? '' : 'line-clamp-1'
                   }`}>
                     {imp}
