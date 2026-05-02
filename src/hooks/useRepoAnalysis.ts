@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
+import { toast } from "sonner";
 import { RepoInfo, FileNode, AnalysisResult } from "@/types/repo";
 import { fetchRepoInfo, fetchRepoTree, fetchKeyFiles, buildTreeString } from "@/lib/github";
-import { toast } from "sonner";
 
 interface AnalysisState {
   repoInfo: RepoInfo | null;
@@ -26,20 +26,20 @@ export function useRepoAnalysis() {
     setState({ repoInfo: null, fileTree: [], analysis: null, isLoading: true, loadingStep: 0, error: null });
 
     try {
-      // Step 1: Fetch repo info
+      // Fetch repo metadata
       const repoInfo = await fetchRepoInfo(owner, repo);
       setState(s => ({ ...s, repoInfo, loadingStep: 1 }));
 
-      // Step 2: Fetch file tree
+      // Fetch file tree
       const fileTree = await fetchRepoTree(owner, repo);
       setState(s => ({ ...s, fileTree, loadingStep: 2 }));
 
-      // Step 3: Fetch key files and analyze
+      // Get critical files for context
       const keyFiles = await fetchKeyFiles(owner, repo, fileTree);
       const treeString = buildTreeString(fileTree);
       setState(s => ({ ...s, loadingStep: 3 }));
 
-      // Serverless backend call
+      // Analyze via backend
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: {
@@ -65,6 +65,7 @@ export function useRepoAnalysis() {
 
       let analysis: AnalysisResult;
       try {
+        // Strip markdown codeblocks
         const cleanedStr = resultStr.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
         analysis = JSON.parse(cleanedStr);
       } catch {
@@ -80,7 +81,6 @@ export function useRepoAnalysis() {
   }, []);
 
   const explainFile = useCallback(async (owner: string, repo: string, filePath: string, content: string): Promise<string> => {
-    // Serverless backend call
     const res = await fetch("/api/explain", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -91,6 +91,7 @@ export function useRepoAnalysis() {
       const errorData = await res.json().catch(() => ({}));
       throw new Error(errorData.error || "Failed to explain file");
     }
+    
     const data = await res.json();
     return data.candidates?.[0]?.content?.parts?.[0]?.text || "No explanation generated.";
   }, []);
