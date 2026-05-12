@@ -1,71 +1,89 @@
 # RepoLens AI
 
-RepoLens AI is an AI-powered GitHub repository analyzer. Understand any codebase in seconds with architecture analysis and tech stack detection.
+RepoLens AI is a web app that helps you quickly understand any public GitHub repository.
+It analyzes repository structure, identifies key modules and technologies, and generates AI-powered summaries.
 
-## Features
+## What You Get
 
-- Analyze any public GitHub repository.
-- Get a complete breakdown of the project's tech stack.
-- Understand the architecture pattern and data flow.
-- Identify key modules and critical files.
-- Receive AI-driven suggestions for improvement and health indicators.
+- Repository overview in plain language
+- Detected tech stack (frontend, backend, testing, etc.)
+- Architecture and data-flow summary
+- Important modules and critical files
+- AI suggestions to improve project health
+- File-level AI explanations from the built-in file explorer
 
-## Technologies Used
+## How It Works
 
-This project is built with:
+1. Enter a public GitHub repository (`owner/repo` or full URL)
+2. RepoLens fetches metadata and repository tree from GitHub
+3. Key files are sent to Gemini for analysis
+4. Results are shown in an interactive dashboard
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-- Supabase Edge Functions (Boilerplate)
-- Google Gemini AI API
+## Tech Stack
 
-## Getting Started
+- React + TypeScript + Vite
+- Tailwind CSS + shadcn/ui
+- Vercel Serverless Functions (`/api`)
+- Google Gemini API
 
-### Prerequisites
+## Prerequisites
 
-- Node.js & npm installed
+- Node.js 18+ and npm
+- A Google Gemini API key
 
-### Development Requirements
-**Important:** You need a free Google Gemini API Key to run this app locally.
+## Local Setup
 
-### Installation
+1. Clone the repository:
 
-1. **Clone the repository:**
-   ```sh
+   ```bash
    git clone <YOUR_GIT_URL>
-   cd <YOUR_PROJECT_NAME>
+   cd quickcode-lens
    ```
 
-2. **Install the dependencies:**
-   ```sh
+2. Install dependencies:
+
+   ```bash
    npm install
    ```
 
-3. **Set up Environment Variables:**
-   Create a `.env.local` file in the root directory and add your Google Gemini API key:
+3. Create `.env.local` in the project root:
+
    ```env
    GEMINI_API_KEY=your_gemini_api_key_here
+   GITHUB_TOKEN=your_github_personal_access_token_here
    ```
 
-4. **Start the development server:**
-   ```sh
+   - `GEMINI_API_KEY` is required
+   - `GITHUB_TOKEN` is optional but recommended to reduce GitHub API rate-limit issues
+
+4. Start the app:
+
+   ```bash
    npm run dev
    ```
 
+## Available Scripts
+
+- `npm run dev` — Start local development server
+- `npm run build` — Create production build
+- `npm run preview` — Preview production build locally
+- `npm run lint` — Run ESLint
+- `npm run test` — Run tests once with Vitest
+
 ## Deployment (Vercel)
 
-This project is configured to deploy directly to [Vercel](https://vercel.com/) with secure Serverless Functions for handling API calls.
+This repository is ready for Vercel deployment.
 
-1. Push your code to a GitHub repository.
-2. Import the project into Vercel.
-3. In Vercel's **Environment Variables** settings, add:
-   - Key: `GEMINI_API_KEY`
-   - Value: `<Your Google Gemini API Key>`
-4. Deploy! Because we have `api/` endpoints and a `vercel.json` specified, Vercel will automatically set up the serverless backend and handle React Router's SPA routing.
+1. Push your code to GitHub
+2. Import the repository into Vercel
+3. Set environment variables in Vercel project settings:
+   - `GEMINI_API_KEY` (required)
+   - `GITHUB_TOKEN` (optional)
+4. Deploy
 
-## Usage
+`vercel.json` and the `api/` directory are already configured for SPA routing and serverless API endpoints.
 
-Simply enter a GitHub repository URL or the owner/repo format (e.g., `facebook/react`) into the search bar to begin the analysis.
+## Notes
+
+- This app is intended for **public** GitHub repositories
+- If analysis fails unexpectedly, verify your API keys and rate limits first
