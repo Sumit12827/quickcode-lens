@@ -20,8 +20,11 @@ export default async function handler(req, res) {
     try {
         const { filePath, content } = req.body;
 
-        // Ensure the Vercel Envrionment variable is loaded
-        const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+        // Ensure the Vercel Environment variable is loaded
+        let GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+        if (GEMINI_API_KEY) {
+            GEMINI_API_KEY = GEMINI_API_KEY.trim().replace(/^["']|["']$/g, "");
+        }
         if (!GEMINI_API_KEY) {
             return res.status(500).json({ error: "GEMINI_API_KEY is not configured on the server." });
         }

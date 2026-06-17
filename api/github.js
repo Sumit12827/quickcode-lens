@@ -20,14 +20,17 @@ export default async function handler(req, res) {
     try {
         const { action, owner, repo, path } = req.body;
 
-        const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+        let GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+        if (GITHUB_TOKEN) {
+            GITHUB_TOKEN = GITHUB_TOKEN.trim().replace(/^["']|["']$/g, "");
+        }
 
         const headers = {
             Accept: "application/vnd.github.v3+json",
             "User-Agent": "RepoLens-AI",
         };
         if (GITHUB_TOKEN) {
-            headers["Authorization"] = `token ${GITHUB_TOKEN}`;
+            headers["Authorization"] = `Bearer ${GITHUB_TOKEN}`;
         }
 
         const GITHUB_API = "https://api.github.com";
@@ -35,6 +38,9 @@ export default async function handler(req, res) {
         if (action === "repoInfo") {
             const ghRes = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`, { headers });
             if (!ghRes.ok) {
+                if (ghRes.status === 401) {
+                    return res.status(401).json({ error: "GitHub token (GITHUB_TOKEN) is invalid or expired. Please check your .env file." });
+                }
                 if (ghRes.status === 404) {
                     return res.status(404).json({ error: "Repository not found. Make sure it's a public repository." });
                 }
@@ -50,6 +56,9 @@ export default async function handler(req, res) {
             // First get the default branch SHA
             const repoRes = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`, { headers });
             if (!repoRes.ok) {
+                if (repoRes.status === 401) {
+                    return res.status(401).json({ error: "GitHub token (GITHUB_TOKEN) is invalid or expired. Please check your .env file." });
+                }
                 if (repoRes.status === 404) {
                     return res.status(404).json({ error: "Repository not found." });
                 }
@@ -67,6 +76,9 @@ export default async function handler(req, res) {
                 { headers }
             );
             if (!treeRes.ok) {
+                if (treeRes.status === 401) {
+                    return res.status(401).json({ error: "GitHub token (GITHUB_TOKEN) is invalid or expired. Please check your .env file." });
+                }
                 if (treeRes.status === 403) {
                     return res.status(403).json({ error: "GitHub API rate limit exceeded. Please add a GITHUB_TOKEN to your .env file." });
                 }
@@ -81,6 +93,9 @@ export default async function handler(req, res) {
                 { headers }
             );
             if (!ghRes.ok) {
+                if (ghRes.status === 401) {
+                    return res.status(401).json({ error: "GitHub token (GITHUB_TOKEN) is invalid or expired. Please check your .env file." });
+                }
                 if (ghRes.status === 403) {
                     return res.status(403).json({ error: "GitHub API rate limit exceeded. Please add a GITHUB_TOKEN to your .env file." });
                 }

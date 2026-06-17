@@ -12,10 +12,10 @@ export function apiPlugin(): Plugin {
                 // Load environment variables so process.env is populated for our Vercel handlers
                 const env = loadEnv(process.env.NODE_ENV || 'development', process.cwd(), '');
                 if (env.GEMINI_API_KEY) {
-                    process.env.GEMINI_API_KEY = env.GEMINI_API_KEY;
+                    process.env.GEMINI_API_KEY = env.GEMINI_API_KEY.trim().replace(/^["']|["']$/g, "");
                 }
                 if (env.GITHUB_TOKEN) {
-                    process.env.GITHUB_TOKEN = env.GITHUB_TOKEN;
+                    process.env.GITHUB_TOKEN = env.GITHUB_TOKEN.trim().replace(/^["']|["']$/g, "");
                 }
 
                 // Patch native Node.js 'res' to mimic Express/Vercel behavior
